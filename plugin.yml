@@ -1,0 +1,31 @@
+{
+  "name": "Muffler",
+  "main": "Thunder33345\\Muffler\\Muffler",
+  "author": "Thunder33345",
+  "description": "Muffle helps you muffle your players and keep then nice and silent!",
+  "website": "https://github.com/Muffler/Muffler",
+  "version": "1.0.0",
+  "api": [
+    "3.0.0"
+  ],
+  "permission": [
+    "chatmuffler": [
+      "defualt": "op"
+      "description": "Chat muffler main node"
+      "children": [
+        "chatmuffler.bypass":[
+          "defualt": "op"
+          "description": "Chat muffler bypass"
+        ]
+        "chatmuffler.muffleuser":[
+          "defualt": "op"
+          "description": "Chat muffler for users"
+        ]
+        "chatmuffler.mufflechat":[
+          "defualt": "op"
+          "description": "Chat muffler for the whole chat"
+        ]
+      ]
+    ]
+  ]
+}
