@@ -8,6 +8,8 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
+use Thunder33345\Muffler\Commands\MuffleChatCommand;
+use Thunder33345\Muffler\Commands\MuffleCommand;
 
 class Muffler extends PluginBase implements Listener
 {
@@ -27,6 +29,13 @@ class Muffler extends PluginBase implements Listener
 		$this->muffleTracker = new MufflerTracker($players, $chat);
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->saveDefaultConfig();
+
+
+		$commandMap = $this->getServer()->getCommandMap();
+		$commandMap->register('muffleuser', new MuffleCommand($this));
+		$commandMap->register('mufflechat', new MuffleChatCommand($this));
+
+
 	}
 
 	public function onDisable()
@@ -34,8 +43,9 @@ class Muffler extends PluginBase implements Listener
 		$all = $this->muffleTracker->getAllMuffled();
 		$chat = $this->muffleTracker->getChatMuffle();
 		$config = new Config($this->getDataFolder() . '/muffle.yml');
-		$config->set('chat', $chat);
 		$config->set('players', $all);
+		$config->set('chat', $chat);
+		$config->save();
 	}
 
 	public function onMuffleTest(PlayerChatEvent $chatEvent):void

@@ -13,15 +13,15 @@ use Thunder33345\Muffler\Muffler;
 
 class MuffleCommand extends PluginCommand implements CommandExecutor
 {
-	public function __construct(string $name, Muffler $owner)
+	public function __construct(Muffler $owner)
 	{
-		parent::__construct($name, $owner);
+		parent::__construct('muffle', $owner);
 		$this->setDescription('Muffler Command');
 		$this->setUsage('/muffle <username> <seconds> or 0 for unmute, -1 for forever');
 		$this->setAliases(['mute', 'silence']);
 		$this->setPermission('chatmuffler.muffleuser');
 		$this->setPermissionMessage('Insufficient permissions.');
-		$this->register($owner->getServer()->getCommandMap());
+		$this->setExecutor($this);
 	}
 
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args):bool
@@ -29,19 +29,22 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 		if(count($args) !== 2) return false;
 		$playerName = array_shift($args);
 		$time = array_shift($args);
-		if(is_int($time)){
+		if(!is_numeric($time)){
 			$sender->sendMessage('time must be a number');
+			return true;
 		}
 
 		/** @var Muffler $muffler */
 		$muffler = $this->getPlugin();
 		$player = $muffler->getServer()->getPlayer($playerName);
-		if($player instanceof Player){
+		if(!$player instanceof Player){
 			$sender->sendMessage("Player (" . $playerName . ") not found, Taking input literally.");
 			$player = $playerName;
 		}
-		$muffler->getMuffleTracker()->muffle($player, $time, true);
-		self::broadcastCommandMessage($sender, "[" . $sender->getName() . " Muted " . $player . " for " . $time . "seconds]");
+		$time = (int)$time;
+		if($time == 0 OR $time == -1) $muffler->getMuffleTracker()->muffle($player, (int)$time);
+		else $muffler->getMuffleTracker()->muffle($player, (int)$time, true);
+		self::broadcastCommandMessage($sender, "Muted " . $player . " for " . $time . " seconds");
 		return true;
 	}
 }
