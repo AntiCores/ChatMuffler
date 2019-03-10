@@ -1,6 +1,6 @@
 # Chat Muffler
 
-##Features
+## Features
 - bloat free
 - mutes players
 - mutes chat
