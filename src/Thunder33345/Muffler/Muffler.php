@@ -26,6 +26,7 @@ class Muffler extends PluginBase implements Listener
 
 		$this->muffleTracker = new MufflerTracker($players, $chat);
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+		$this->saveDefaultConfig();
 	}
 
 	public function onDisable()
@@ -35,7 +36,6 @@ class Muffler extends PluginBase implements Listener
 		$config = new Config($this->getDataFolder() . '/muffle.yml');
 		$config->set('chat', $chat);
 		$config->set('players', $all);
-
 	}
 
 	public function onMuffleTest(PlayerChatEvent $chatEvent):void
@@ -44,13 +44,15 @@ class Muffler extends PluginBase implements Listener
 		$muffleTracker = $this->muffleTracker;
 		if($muffleTracker->isChatMuffled()){
 			if(!$player->hasPermission('chatmuffler.bypass')) return;
-			$player->sendMessage("Chat have been muted!");
+			$msg = $this->getConfig()->get('chatMuted', 'Chat have been muted!');
+			$player->sendMessage($msg);
 			$chatEvent->setCancelled(true);
 			return;
 		}
 
 		if($muffleTracker->isMuffled($player)){
 			if(!$player->hasPermission('chatmuffler.bypass')) return;
+			$msg = $this->getConfig()->get('userMuted', 'You have been muted!');
 			$player->sendMessage("You have been muted from chat!");
 			$chatEvent->setCancelled(true);
 			return;
