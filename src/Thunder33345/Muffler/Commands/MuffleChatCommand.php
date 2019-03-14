@@ -16,7 +16,7 @@ class MuffleChatCommand extends PluginCommand implements CommandExecutor
 	{
 		parent::__construct('mufflechat', $owner);
 		$this->setDescription('Chat Muffler Command');
-		$this->setUsage('/mufflechat <seconds> or 0 for unmute, -1 for forever');
+		$this->setUsage('/mufflechat <seconds> or timeformat ex: 1h2i3s, 0 for unmute and -1 for forever');
 		$this->setAliases(['mutechat', 'silencechat']);
 		$this->setPermission('chatmuffler.mufflechat');
 		$this->setPermissionMessage('Insufficient permissions.');
@@ -30,15 +30,24 @@ class MuffleChatCommand extends PluginCommand implements CommandExecutor
 		$time = array_shift($args);
 		var_dump($time);
 		if(!is_numeric($time)){
-			$sender->sendMessage('time must be a number');
-			return true;
+			$time = Muffler::parseTimeFormat($time);
+			if($time == null){
+				$sender->sendMessage('Failed to parse (' . $time . '), Time must be in seconds or timeformat ex 1h2i3s');
+				return true;
+			}
 		}
 		/** @var Muffler $muffler */
 		$muffler = $this->getPlugin();
 		$time = (int)$time;
 		if($time == 0 OR $time == -1) $muffler->getMuffleTracker()->muffleChat($time);
 		else $muffler->getMuffleTracker()->muffleChat($time, true);
-		self::broadcastCommandMessage($sender, "Muted the chat for " . $time . "seconds");
+		if($time <= 0){
+			if($time == 0) self::broadcastCommandMessage($sender, "Unmuted the chat");
+			if($time == -1) self::broadcastCommandMessage($sender, "Muted muted the chat forever");
+			return true;
+		}
+
+		self::broadcastCommandMessage($sender, "Muted the chat for " . Muffler::parseSecondToHuman($time));
 		return true;
 	}
 }

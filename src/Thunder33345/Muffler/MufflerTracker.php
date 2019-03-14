@@ -23,7 +23,7 @@ class MufflerTracker
 		}
 		if($chatMuffled !== -1 AND time() > $chatMuffled) $chatMuffled = 0;
 		$this->chatMuffled = $chatMuffled;
-		var_dump($this->muffled,$this->chatMuffled);
+		var_dump($this->muffled, $this->chatMuffled);
 	}
 
 	/**
@@ -50,7 +50,7 @@ class MufflerTracker
 			$till = time() + $till;
 		}
 		$this->muffled[$player] = $till;
-		var_dump($this->muffled,$this->chatMuffled);
+		var_dump($this->muffled, $this->chatMuffled);
 	}
 
 	/**
@@ -91,7 +91,7 @@ class MufflerTracker
 	 * @return bool
 	 * returns true if the player is muted, else false if they aren't muted
 	 */
-	public function isMuffled($player){ return ($this->getMuffledExpiry($player, true) === 0); }
+	public function isMuffled($player){ return ($this->getMuffledExpiry($player, true) > 1); }
 
 	/**
 	 * @param int $till
@@ -137,7 +137,7 @@ class MufflerTracker
 		return $expiry;
 	}
 
-	public function isChatMuffled():bool{ return ($this->getChatMuffle(true) === 0); }
+	public function isChatMuffled():bool{ return ($this->getChatMuffle(true) > 1); }
 
 	/**
 	 * @param bool $skipCleanup
@@ -148,7 +148,7 @@ class MufflerTracker
 	 */
 	public function getAllMuffled($skipCleanup = false):array
 	{
-		var_dump($this->muffled,$this->chatMuffled);
+		var_dump($this->muffled, $this->chatMuffled);
 		if($skipCleanup) return $this->muffled;
 		foreach($this->muffled as $player => $till){
 			if($till === -1) continue;
@@ -156,7 +156,7 @@ class MufflerTracker
 				unset ($this->muffled[$player]);
 			}
 		}
-		var_dump($this->muffled,$this->chatMuffled);
+		var_dump($this->muffled, $this->chatMuffled);
 		return $this->muffled;
 	}
 
