@@ -1,5 +1,7 @@
 # Chat Muffler
 
+A Simple Plugin For Managing Mutes
+
 ## Features
 - Bloat free
 - Mutes players
