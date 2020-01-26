@@ -15,7 +15,17 @@
       "children": {
         "chatmuffler.bypass": {
           "defualt": "op",
-          "description": "Chat muffler bypass"
+          "description": "Chat muffler bypass",
+          "children": {
+            "chatmuffler.bypass.chat": {
+              "defualt": "op",
+              "description": "Chat muffler bypass for chat mute"
+            },
+            "chatmuffler.bypass.user": {
+              "defualt": "op",
+              "description": "Chat muffler bypass for user mute"
+            }
+          }
         },
         "chatmuffler.muffleuser": {
           "defualt": "op",

@@ -55,6 +55,8 @@ class Muffler extends PluginBase implements Listener
 		$muffleTracker = $this->muffleTracker;
 
 		if($muffleTracker->isChatMuffled()){//chat muted
+			if($player->hasPermission('chatmuffler.bypass.chat')) return;
+
 			$remain = $muffleTracker->getChatMuffle(true);
 			if($remain == MufflerTracker::mute_forever)
 				$remain = 'Forever';
@@ -69,6 +71,8 @@ class Muffler extends PluginBase implements Listener
 		}
 
 		if($muffleTracker->isMuffled($player)){//player muted
+			if($player->hasPermission('chatmuffler.bypass.user')) return;
+
 			$remain = $muffleTracker->getMuffledExpiry($player, true);
 			if($remain == MufflerTracker::mute_forever)
 				$remain = 'Forever';
