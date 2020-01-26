@@ -15,7 +15,7 @@ class MuffleChatCommand extends PluginCommand implements CommandExecutor
 	public function __construct(Muffler $owner)
 	{
 		parent::__construct('mufflechat', $owner);
-		$this->setDescription('Chat Muffler Command');
+		$this->setDescription('Muffle Chat Command');
 		$this->setUsage('/mufflechat <seconds> or timeformat ex: 1h2i3s, 0 for unmute and -1 for forever');
 		$this->setAliases(['mutechat', 'silencechat']);
 		$this->setPermission('chatmuffler.mufflechat');

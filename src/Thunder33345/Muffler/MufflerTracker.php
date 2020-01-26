@@ -23,7 +23,6 @@ class MufflerTracker
 		}
 		if($chatMuffled !== -1 AND time() > $chatMuffled) $chatMuffled = 0;
 		$this->chatMuffled = $chatMuffled;
-		var_dump($this->muffled, $this->chatMuffled);
 	}
 
 	/**
@@ -39,18 +38,27 @@ class MufflerTracker
 	 * + -1 will mute them forever
 	 * + 0 will release the mute, any number that's in the past will have the same effect, but 0 is preferred to release mute
 	 *
-	 * @param bool $asSeconds
+	 * @param bool $asDuration
 	 * Makes it treat $till as how many seconds to mute for
 	 */
 
-	public function muffle($player, int $till, bool $asSeconds = false):void
+	public function muffle($player, int $till, bool $asDuration = false):void
 	{
 		$player = $this->convertPlayer($player);
-		if($asSeconds){
+
+		if($till == -1){
+			$this->muffled[$player] = $till;
+			return;
+		}
+		if($till == 0){
+			unset($this->muffled[$player]);
+			return;
+		}
+
+		if($asDuration){
 			$till = time() + $till;
 		}
 		$this->muffled[$player] = $till;
-		var_dump($this->muffled, $this->chatMuffled);
 	}
 
 	/**
@@ -66,7 +74,7 @@ class MufflerTracker
 	 * 0 means it has expired
 	 * -1 means the mute will last forever
 	 */
-	public function getMuffledExpiry($player, $asRemaining = false):int
+	public function getMuffledExpiry($player, bool $asRemaining = false):int
 	{
 		$player = $this->convertPlayer($player);
 		if(!isset($this->muffled[$player])) return 0;
@@ -108,6 +116,15 @@ class MufflerTracker
 	 */
 	public function muffleChat(int $till, bool $asSeconds = false):void
 	{
+		if($till == -1){
+			$this->chatMuffled = $till;
+			return;
+		}
+		if($till == 0){
+			unset($this->chatMuffled);
+			return;
+		}
+
 		if($asSeconds)
 			$till = time() + $till;
 
@@ -148,7 +165,6 @@ class MufflerTracker
 	 */
 	public function getAllMuffled($skipCleanup = false):array
 	{
-		var_dump($this->muffled, $this->chatMuffled);
 		if($skipCleanup) return $this->muffled;
 		foreach($this->muffled as $player => $till){
 			if($till === -1) continue;
@@ -156,7 +172,6 @@ class MufflerTracker
 				unset ($this->muffled[$player]);
 			}
 		}
-		var_dump($this->muffled, $this->chatMuffled);
 		return $this->muffled;
 	}
 

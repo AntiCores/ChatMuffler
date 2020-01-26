@@ -16,7 +16,7 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 	public function __construct(Muffler $owner)
 	{
 		parent::__construct('muffle', $owner);
-		$this->setDescription('Muffler Command');
+		$this->setDescription('Muffler User Command');
 		$this->setUsage('/muffle <username> <seconds> or timeformat ex: 1h2i3s, 0 for unmute and -1 for forever');
 		$this->setAliases(['mute', 'silence']);
 		$this->setPermission('chatmuffler.muffleuser');
@@ -46,13 +46,12 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 		} else{
 			$playerName = $player->getName();
 		}
-		$time = (int)$time;
 		if($time == 0 OR $time == -1) $muffler->getMuffleTracker()->muffle($player, (int)$time);
 		else $muffler->getMuffleTracker()->muffle($player, (int)$time, true);
 
 		if($time <= 0){
 			if($time == 0) self::broadcastCommandMessage($sender, "Unmuted $playerName");
-			if($time == -1) self::broadcastCommandMessage($sender, "Muted muted $playerName forever");
+			if($time == -1) self::broadcastCommandMessage($sender, "Muted muted $playerName for forever");
 			return true;
 		}
 
