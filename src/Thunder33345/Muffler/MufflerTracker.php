@@ -68,7 +68,7 @@ class MufflerTracker
 	}
 
 	/**
-	 * @param $player
+	 * @param Player|String $player
 	 * Allows for Player or player name, will be auto convert to lowercase
 	 *
 	 * @param bool $asRemaining
@@ -99,7 +99,7 @@ class MufflerTracker
 	}
 
 	/**
-	 * @param $player
+	 * @param Player|String $player
 	 * Allows for Player or player name, will be auto convert to lowercase
 	 *
 	 * @return bool
