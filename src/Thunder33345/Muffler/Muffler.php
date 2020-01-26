@@ -55,14 +55,28 @@ class Muffler extends PluginBase implements Listener
 		$muffleTracker = $this->muffleTracker;
 
 		if($muffleTracker->isChatMuffled()){//chat muted
-			$msg = $this->getConfig()->get('chatMuted', 'Chat have been muted!');
+			$remain = $muffleTracker->getChatMuffle(true);
+			if($remain == MufflerTracker::mute_forever)
+				$remain = 'Forever';
+			else
+				$remain = self::parseSecondToHuman($remain);
+
+			$msg = $this->getConfig()->get('chatMuted', 'The chat have been muted for {time}!');
+			$msg = str_replace('{time}', $remain, $msg);
 			$player->sendMessage($msg);
 			$chatEvent->setCancelled(true);
 			return;
 		}
 
 		if($muffleTracker->isMuffled($player)){//player muted
-			$msg = $this->getConfig()->get('userMuted', 'You have been muted!');
+			$remain = $muffleTracker->getMuffledExpiry($player, true);
+			if($remain == MufflerTracker::mute_forever)
+				$remain = 'Forever';
+			else
+				$remain = self::parseSecondToHuman($remain);
+
+			$msg = $this->getConfig()->get('userMuted', 'You have been muted for {time}!');
+			$msg = str_replace('{time}', $remain, $msg);
 			$player->sendMessage($msg);
 			$chatEvent->setCancelled(true);
 			return;
@@ -107,15 +121,15 @@ class Muffler extends PluginBase implements Listener
 		$diff = $dt1->diff($dt2);
 		if($diff === false) return null;
 		$str = [];
-		if($diff->y > 0) $str[] = $diff->y . ' year';
-		if($diff->m > 0) $str[] = $diff->m . ' month';
-		if($diff->d > 0) $str[] = $diff->d . ' day';
-		if($diff->h > 0) $str[] = $diff->h . ' hour';
-		if($diff->i > 0) $str[] = $diff->i . ' minute';
-		if($diff->s > 0) $str[] = $diff->s . ' second';
+		if($diff->y > 0) $str[] = $diff->y . ' year' . ($diff->y > 1 ? 's' : '');
+		if($diff->m > 0) $str[] = $diff->m . ' month' . ($diff->m > 1 ? 's' : '');
+		if($diff->d > 0) $str[] = $diff->d . ' day' . ($diff->d > 1 ? 's' : '');
+		if($diff->h > 0) $str[] = $diff->h . ' hour' . ($diff->h > 1 ? 's' : '');
+		if($diff->i > 0) $str[] = $diff->i . ' minute' . ($diff->i > 1 ? 's' : '');
+		if($diff->s > 0) $str[] = $diff->s . ' second' . ($diff->s > 1 ? 's' : '');
 		if(count($str) > 0){
 			$str = implode(', ', $str);
-		} else{
+		} else {
 			$str = $diff->s . ' second';
 		}
 		return $str;
