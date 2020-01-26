@@ -9,6 +9,7 @@ use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use Thunder33345\Muffler\Muffler;
+use Thunder33345\Muffler\MufflerTracker;
 
 class MuffleChatCommand extends PluginCommand implements CommandExecutor
 {
@@ -25,10 +26,13 @@ class MuffleChatCommand extends PluginCommand implements CommandExecutor
 
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args):bool
 	{
-		var_dump($args);
 		if(count($args) !== 1) return false;
 		$time = array_shift($args);
-		var_dump($time);
+		if(is_string($time)){
+			$time = strtolower($time);
+			if($time == 'forever') $time = MufflerTracker::mute_forever;
+			elseif($time == 'unmute') $time = MufflerTracker::unmute;
+		}
 		if(!is_numeric($time)){
 			$time = Muffler::parseTimeFormat($time);
 			if($time == null){
@@ -38,16 +42,12 @@ class MuffleChatCommand extends PluginCommand implements CommandExecutor
 		}
 		/** @var Muffler $muffler */
 		$muffler = $this->getPlugin();
-		$time = (int)$time;
-		if($time == 0 OR $time == -1) $muffler->getMuffleTracker()->muffleChat($time);
-		else $muffler->getMuffleTracker()->muffleChat($time, true);
-		if($time <= 0){
-			if($time == 0) self::broadcastCommandMessage($sender, "Unmuted the chat");
-			if($time == -1) self::broadcastCommandMessage($sender, "Muted muted the chat forever");
-			return true;
-		}
 
-		self::broadcastCommandMessage($sender, "Muted the chat for " . Muffler::parseSecondToHuman($time));
+		$muffler->getMuffleTracker()->muffleChat($time, true);
+
+		if($time == MufflerTracker::unmute) self::broadcastCommandMessage($sender, "Unmuted the chat");
+		if($time == MufflerTracker::mute_forever) self::broadcastCommandMessage($sender, "Muted muted the chat forever");
+		else self::broadcastCommandMessage($sender, "Muted the chat for " . Muffler::parseSecondToHuman($time));
 		return true;
 	}
 }

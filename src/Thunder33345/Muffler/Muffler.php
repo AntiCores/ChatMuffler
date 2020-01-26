@@ -31,13 +31,10 @@ class Muffler extends PluginBase implements Listener
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->saveDefaultConfig();
 
-
 		$commandMap = $this->getServer()->getCommandMap();
 		$commandMap->register($this->getName(), new MuffleCommand($this));
 		$commandMap->register($this->getName(), new MuffleChatCommand($this));
 		$commandMap->register($this->getName(), new MuffleInfoCommand($this));
-
-
 	}
 
 	public function onDisable()

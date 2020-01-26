@@ -10,6 +10,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\Player;
 use Thunder33345\Muffler\Muffler;
+use Thunder33345\Muffler\MufflerTracker;
 
 class MuffleCommand extends PluginCommand implements CommandExecutor
 {
@@ -29,6 +30,11 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 		if(count($args) !== 2) return false;
 		$playerName = array_shift($args);
 		$time = array_shift($args);
+		if(is_string($time)){
+			$time = strtolower($time);
+			if($time == 'forever') $time = MufflerTracker::mute_forever;
+			elseif($time == 'unmute') $time = MufflerTracker::unmute;
+		}
 		if(!is_numeric($time)){
 			$time = Muffler::parseTimeFormat($time);
 			if($time == null){
@@ -43,19 +49,15 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 		if(!$player instanceof Player){
 			$sender->sendMessage("Player (" . $playerName . ") not found, Taking input literally.");
 			$player = $playerName;
-		} else{
+		} else {
 			$playerName = $player->getName();
 		}
-		if($time == 0 OR $time == -1) $muffler->getMuffleTracker()->muffle($player, (int)$time);
-		else $muffler->getMuffleTracker()->muffle($player, (int)$time, true);
 
-		if($time <= 0){
-			if($time == 0) self::broadcastCommandMessage($sender, "Unmuted $playerName");
-			if($time == -1) self::broadcastCommandMessage($sender, "Muted muted $playerName for forever");
-			return true;
-		}
+		$muffler->getMuffleTracker()->muffle($player, $time, true);
 
-		self::broadcastCommandMessage($sender, "Muted " . $playerName . " for " . Muffler::parseSecondToHuman($time) . " seconds");
+		if($time == MufflerTracker::unmute) self::broadcastCommandMessage($sender, "Unmuted $playerName");
+		if($time == MufflerTracker::mute_forever) self::broadcastCommandMessage($sender, "Muted muted $playerName for forever");
+		else self::broadcastCommandMessage($sender, "Muted " . $playerName . " for " . Muffler::parseSecondToHuman($time) . " seconds");
 		return true;
 	}
 }
