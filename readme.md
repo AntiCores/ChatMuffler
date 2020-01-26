@@ -1,19 +1,40 @@
 # Chat Muffler
 
 ## Features
-- bloat free
-- mutes players
-- mutes chat
-- data saves past reboots
-- more advanced mute time parser
+- Bloat free
+- Mutes players
+- Mutes chat
+- Data saves past reboots
+- Advanced mute time parser
+
+## Commands
+| Command    	| Description     	| Usage                     	| Aliases               	|
+|------------	|-----------------	|---------------------------	|-----------------------	|
+| muffle     	| muffle someone  	| /muffle <username> <time> 	| mute, silence         	|
+| mufflechat 	| muffle the chat 	| /mufflechat <time>        	| mutechat, silencechat 	|
+| muffleinfo 	| muffle info     	| /muffleinfo [username]    	| muteinfo              	|
+
+## Permission
+
+| Permission Node              	| Description                       	| Default 	|
+|------------------------------	|-----------------------------------	|---------	|
+| chatmuffler.bypass           	| Bypass All Muffled Restriction    	| OP      	|
+| chatmuffler.bypass.chat      	| Bypass Muffled Chat Restriction   	| OP      	|
+| chatmuffler.bypass.user      	| Bypass User Muffled Restriction   	| OP      	|
+| chatmuffler.muffleuser       	| Allow Muting Other Users          	| OP      	|
+| chatmuffler.mufflechat       	| Allow Muting Chat                 	| OP      	|
+| chatmuffler.muffleinfo       	| Allow Using Muffle Info           	| Anyone  	|
+| chatmuffler.muffleinfo.self  	| Allow Using Muffle Info On Self   	| Anyone  	|
+| chatmuffler.muffleinfo.other 	| Allow Using Muffle Info On Others 	| OP      	|
 
 ## Time parser supports
-year(y), month(m), week(w), day(d), hour(h), minute(i), second(s)
-/mute bob 12h30i50s
-will mute bob for 12 hours, 30 minutes, 50 seconds
+\<time\> can be second which is assumed by default, or a time formatted input
 
-muting with 0 will unmute,
-and muting with -1 will mute forever 
+Legend: (y)ear, (m)onth, (w)eek, (d)ay, (h)our, m(i)nute, (s)econd
 
-## Coming soon
+/mute bob `12h30i50s` will mute bob for `12 hours, 30 minutes, 50 seconds`
+
+muting using `0` or `unmute` will unmute, and `-1` or `forever` will mute forever 
+
+## Maybe?
 - mute ui for more advanced/easy operations

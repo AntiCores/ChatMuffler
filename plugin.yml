@@ -10,42 +10,42 @@
   ],
   "permission": {
     "chatmuffler": {
-      "defualt": "op",
+      "defualt": "false",
       "description": "Chat muffler main node",
       "children": {
         "chatmuffler.bypass": {
           "defualt": "op",
-          "description": "Chat muffler bypass",
+          "description": "Bypass All Muffled Restriction",
           "children": {
             "chatmuffler.bypass.chat": {
               "defualt": "op",
-              "description": "Chat muffler bypass for chat mute"
+              "description": "Bypass Muffled Chat Restriction"
             },
             "chatmuffler.bypass.user": {
               "defualt": "op",
-              "description": "Chat muffler bypass for user mute"
+              "description": "Bypass User Muffled Restriction"
             }
           }
         },
         "chatmuffler.muffleuser": {
           "defualt": "op",
-          "description": "Chat muffler for users"
+          "description": "Allow Muting Other Users"
         },
         "chatmuffler.mufflechat": {
           "defualt": "op",
-          "description": "Chat muffler for the whole chat"
+          "description": "Allow Muting Chat"
         },
         "chatmuffler.muffleinfo": {
           "defualt": "true",
-          "description": "Chat muffler info",
+          "description": "Allow Using Muffle Info",
           "children": {
             "chatmuffler.muffleinfo.self": {
               "defualt": "true",
-              "description": "Chat muffler lookup self"
+              "description": "Allow Using Muffle Info On Self"
             },
             "chatmuffler.muffleinfo.other": {
               "defualt": "op",
-              "description": "Chat muffler lookup others"
+              "description": "Allow Using Muffle Info On Others"
             }
           }
         }
