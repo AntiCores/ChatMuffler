@@ -32,8 +32,8 @@ class Muffler extends PluginBase implements Listener
 
 
 		$commandMap = $this->getServer()->getCommandMap();
-		$commandMap->register('muffleuser', new MuffleCommand($this));
-		$commandMap->register('mufflechat', new MuffleChatCommand($this));
+		$commandMap->register($this->getName(), new MuffleCommand($this));
+		$commandMap->register($this->getName(), new MuffleChatCommand($this));
 
 
 	}
