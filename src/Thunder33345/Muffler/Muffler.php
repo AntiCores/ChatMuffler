@@ -130,7 +130,7 @@ class Muffler extends PluginBase implements Listener
 		if($diff->h > 0) $str[] = $diff->h . ' hour' . ($diff->h > 1 ? 's' : '');
 		if($diff->i > 0) $str[] = $diff->i . ' minute' . ($diff->i > 1 ? 's' : '');
 		if($diff->s > 0) $str[] = $diff->s . ' second' . ($diff->s > 1 ? 's' : '');
-		if(count($str) > 0){
+		if(count($str) != 0){
 			$str = implode(', ', $str);
 		} else {
 			$str = $diff->s . ' second';

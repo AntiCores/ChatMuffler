@@ -49,9 +49,9 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 
 		$muffler->getMuffleTracker()->muffle($player, $time, true);
 
-		if($time == MufflerTracker::unmute) self::broadcastCommandMessage($sender, "Unmuted $playerName");
-		if($time == MufflerTracker::mute_forever) self::broadcastCommandMessage($sender, "Muted muted $playerName for forever");
-		else self::broadcastCommandMessage($sender, "Muted " . $playerName . " for " . Muffler::parseSecondToHuman($time) . " seconds");
+		if($time == MufflerTracker::unmute) self::broadcastCommandMessage($sender, "Unmuted $playerName.");
+		if($time == MufflerTracker::mute_forever) self::broadcastCommandMessage($sender, "Muted muted $playerName for forever.");
+		else self::broadcastCommandMessage($sender, "Muted " . $playerName . " for " . Muffler::parseSecondToHuman($time) . ".");
 		return true;
 	}
 }
