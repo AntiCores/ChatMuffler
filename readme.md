@@ -15,6 +15,7 @@ A Simple Plugin For Managing Mutes
 | Command    	| Description     	| Usage                     	    | Aliases               	|
 |------------	|-----------------	|---------------------------	    |-----------------------	|
 | muffle     	| muffle someone  	| /muffle <username> <time> 	    | mute, silence         	|
+| unmuffle     	| unmuffle someone 	| /muffle <username> <time> 	    | mute, silence         	|
 | mufflechat 	| muffle the chat 	| /mufflechat <time>        	    | mutechat, silencechat 	|
 | muffleinfo 	| muffle info     	| /muffleinfo [username] -a/-all    | muteinfo              	|
 
