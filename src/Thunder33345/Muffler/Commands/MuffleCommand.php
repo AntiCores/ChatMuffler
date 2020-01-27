@@ -32,7 +32,7 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 		$timeT = array_shift($args);
 
 		$time = Muffler::castToInt($timeT);
-		if($time == null){
+		if($time === null){
 			$sender->sendMessage('Failed to parse (' . $timeT . '), Time must be in seconds or timeformat ex 1h2i3s');
 			return true;
 		}
@@ -50,7 +50,7 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 		$muffler->getMuffleTracker()->muffle($player, $time, true);
 
 		if($time == MufflerTracker::unmute) self::broadcastCommandMessage($sender, "Unmuted $playerName.");
-		if($time == MufflerTracker::mute_forever) self::broadcastCommandMessage($sender, "Muted muted $playerName for forever.");
+		elseif($time == MufflerTracker::mute_forever) self::broadcastCommandMessage($sender, "Muted muted $playerName for forever.");
 		else self::broadcastCommandMessage($sender, "Muted " . $playerName . " for " . Muffler::parseSecondToHuman($time) . ".");
 		return true;
 	}
