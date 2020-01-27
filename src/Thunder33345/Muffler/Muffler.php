@@ -11,6 +11,7 @@ use pocketmine\utils\Config;
 use Thunder33345\Muffler\Commands\MuffleChatCommand;
 use Thunder33345\Muffler\Commands\MuffleCommand;
 use Thunder33345\Muffler\Commands\MuffleInfoCommand;
+use Thunder33345\Muffler\Commands\UnMuffleCommand;
 
 class Muffler extends PluginBase implements Listener
 {
@@ -33,6 +34,7 @@ class Muffler extends PluginBase implements Listener
 
 		$commandMap = $this->getServer()->getCommandMap();
 		$commandMap->register($this->getName(), new MuffleCommand($this));
+		$commandMap->register($this->getName(), new UnMuffleCommand($this));
 		$commandMap->register($this->getName(), new MuffleChatCommand($this));
 		$commandMap->register($this->getName(), new MuffleInfoCommand($this));
 	}
