@@ -40,5 +40,11 @@ Legend: (y)ear, (m)onth, (w)eek, (d)ay, (h)our, m(i)nute, (s)econd
 
 muting using `0` or `unmute` will unmute, and `-1` or `forever` will mute forever 
 
+## API
+API functions are located in `MufflerTracker` which can be accessed via `Muffler::getMuffleTracker` when the plugin is enabled
+
+The details of the functions can be accessed in `MufflerTracker` which is documented with PHP doc and all you need
+
+
 ## Maybe?
 - mute ui for more advanced/easy operations

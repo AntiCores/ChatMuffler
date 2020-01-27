@@ -13,6 +13,14 @@ class MufflerTracker
 	protected $muffled = [];
 	protected $chatMuffled = -1;
 
+	/**
+	 * MufflerTracker constructor.
+	 *
+	 * @param array $muffled
+	 * Previously exported muffle state of users and time keyed in [user=>time,...]
+	 * @param int $chatMuffled
+	 * Previously exported chat state
+	 */
 	public function __construct(array $muffled, int $chatMuffled)
 	{
 
@@ -28,7 +36,7 @@ class MufflerTracker
 	}
 
 	/**
-	 * Mute/Unmute a player
+	 * Mute/Unmute a player depending on the input
 	 *
 	 * @param Player|String $player
 	 * Allows for Player or player name, will be auto convert to lowercase
@@ -36,15 +44,16 @@ class MufflerTracker
 	 * @param int $till
 	 * Till when do you want to mute them?
 	 * Specify a EPOCH time in the future to specify when do you their mute to be released
-	 * this please note will OVERWRITE previous mute
+	 * Please note will OVERWRITE previous mute
 	 *
 	 * Magic numbers:
-	 * + -1 will mute them forever
-	 * + 0 will release the mute, any number that's in the past will have the same effect, but 0 is preferred to release mute
-	 * + < -1 will release the mute to negate undefined behaviour
+	 * MufflerTracker::mute_forever(-1):  will mute them forever
+	 * MufflerTracker::unmute(0): will release the mute
+	 * Any number smaller then -1 or any number that's in the past will perform an unmute, even if it's not recommended
+	 * Magic numbers ignores $asDuration
 	 *
 	 * @param bool $asDuration
-	 * Makes it treat $till as how many seconds to mute for
+	 * Makes it treat $till as how many seconds to mute for (mute time =time()+$till
 	 */
 
 	public function muffle($player, int $till, bool $asDuration = false):void
@@ -68,17 +77,20 @@ class MufflerTracker
 	}
 
 	/**
+	 * Gets the player's mute expiry time
+	 *
 	 * @param Player|String $player
-	 * Allows for Player or player name, will be auto convert to lowercase
+	 * The player to check for
 	 *
 	 * @param bool $asRemaining
 	 * True makes this return how long will the mute expire in seconds
 	 *
 	 * @return int
-	 * When will the mute expires in EPOCH
+	 * When will the mute expires in EPOCH OR remaining if $asRemaining is true
 	 *
-	 * 0 means it has expired
-	 * -1 means the mute will last forever
+	 * Magic numbers:
+	 * MufflerTracker::mute_forever(-1):  User is muted forever
+	 * MufflerTracker::unmute(0): User isn't muted
 	 */
 	public function getMuffledExpiry($player, bool $asRemaining = false):int
 	{
@@ -99,6 +111,8 @@ class MufflerTracker
 	}
 
 	/**
+	 * A simple checks if the player is muffled
+	 *
 	 * @param Player|String $player
 	 * Allows for Player or player name, will be auto convert to lowercase
 	 *
@@ -114,14 +128,18 @@ class MufflerTracker
 	}
 
 	/**
+	 * Mutes the whole chat
+	 *
 	 * @param int $till
 	 * Till when do you want to mute the chat?
 	 * Specify a EPOCH time in the future to specify when do the chat mute is to be released
-	 * this please note will OVERWRITE previous mute
+	 * Please note will OVERWRITE previous mute
 	 *
 	 * Magic numbers:
-	 * + -1 will mute them forever
-	 * + 0 will release the mute, any number that's in the past will have the same effect, but 0 is preferred to release mute
+	 * MufflerTracker::mute_forever(-1):  will mute them forever
+	 * MufflerTracker::unmute(0): will release the mute
+	 * Any number smaller then -1 or any number that's in the past will perform an unmute, even if it's not recommended
+	 * Magic numbers ignores $asDuration
 	 *
 	 * @param bool $asDuration
 	 * Makes it treat $till as duration of time()+seconds to mute for
@@ -144,13 +162,17 @@ class MufflerTracker
 	}
 
 	/**
+	 * Gets the status of the chat
+	 *
 	 * @param bool $asRemaining
+	 * True makes this return how long will the mute expire in seconds
 	 *
 	 * @return int
-	 * Until EPOCH time
+	 * When will the mute expires in EPOCH OR remaining if $asRemaining is true
 	 *
-	 * -1 for forever
-	 * 0 for no mutes
+	 * Magic numbers:
+	 * MufflerTracker::mute_forever(-1):  User is muted forever
+	 * MufflerTracker::unmute(0): User isn't muted
 	 */
 	public function getChatMuffle(bool $asRemaining = false):int
 	{
@@ -177,11 +199,14 @@ class MufflerTracker
 	}
 
 	/**
+	 * Exports the cooldown timers so it persist after reboots
+	 *
 	 * @param bool $skipCleanup
 	 * Skips the cleaning up, as this function was intended as exporting, any entries that are expired will be removed
 	 *
 	 * @return array
 	 * Array of muffled players name lower caps as key, and until EPOCH time as value
+	 * @internal Internal state exporting function
 	 */
 	public function getAllMuffled($skipCleanup = false):array
 	{
@@ -197,9 +222,12 @@ class MufflerTracker
 
 
 	/**
+	 * Convert Player/Player Names into lowercased string
+	 *
 	 * @param Player|String $player
 	 *
 	 * @return string
+	 * @internal Internal Boilerplate Function
 	 */
 	protected function convertPlayer($player):string
 	{
