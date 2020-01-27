@@ -46,6 +46,10 @@
             "chatmuffler.muffleinfo.other": {
               "defualt": "op",
               "description": "Allow Using Muffle Info On Others"
+            },
+            "chatmuffler.muffleinfo.all": {
+              "defualt": "op",
+              "description": "Allow Using Muffle Info To List Everyone"
             }
           }
         }

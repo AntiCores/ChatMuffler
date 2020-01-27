@@ -18,7 +18,7 @@ class MuffleInfoCommand extends PluginCommand implements CommandExecutor
 	{
 		parent::__construct('muffleinfo', $owner);
 		$this->setDescription('Muffler Info Command');
-		$this->setUsage('/muffleinfo [username]');
+		$this->setUsage('/muffleinfo [username]| -a/-all');
 		$this->setAliases(['muteinfo']);
 		$this->setPermission('chatmuffler.muffleinfo');
 		$this->setPermissionMessage('Insufficient permissions.');
@@ -61,12 +61,32 @@ class MuffleInfoCommand extends PluginCommand implements CommandExecutor
 
 		if(count($args) !== 1) return false;
 
+		$playerName = strtolower(array_shift($args));
+
+		if($playerName == '-all' OR $playerName == '-a'){
+			if(!$sender->hasPermission('chatmuffler.muffleinfo.all')){
+				$sender->sendMessage("Insufficient permissions.");
+				return true;
+			}
+			$sender->sendMessage("[ChatMuffler] Listing All Mutes");
+			$players = $muffleTracker->getAllMuffled();
+			foreach($players as $player => $till){
+				if($till == MufflerTracker::mute_forever){
+					$sender->sendMessage("$player => forever");
+					continue;
+				}
+				$remaining = $till - time();
+				if($till == MufflerTracker::unmute OR $remaining <= 0) continue;
+
+				$sender->sendMessage("$player => " . Muffler::parseSecondToHuman($remaining));
+			}
+			return true;
+		}
+
 		if(!$sender->hasPermission('chatmuffler.muffleinfo.other')){
 			$sender->sendMessage("Insufficient permissions.");
 			return true;
 		}
-
-		$playerName = array_shift($args);
 
 		$player = $muffler->getServer()->getPlayer($playerName);
 		if(!$player instanceof Player){
@@ -76,12 +96,12 @@ class MuffleInfoCommand extends PluginCommand implements CommandExecutor
 		}
 
 		if($muffleTracker->isMuffled($playerName)){
-			$time = $muffleTracker->getMuffledExpiry($playerName, true);
-			if($time == MufflerTracker::mute_forever)
-				$time = 'forever';
+			$till = $muffleTracker->getMuffledExpiry($playerName, true);
+			if($till == MufflerTracker::mute_forever)
+				$till = 'forever';
 			else
-				$time = "for " . Muffler::parseSecondToHuman($time);
-			$sender->sendMessage("[ChatMuffler] $playerName have been muted " . $time . ".");
+				$till = "for " . Muffler::parseSecondToHuman($till);
+			$sender->sendMessage("[ChatMuffler] $playerName have been muted " . $till . ".");
 		} else
 			$sender->sendMessage("[ChatMuffler] $playerName is not muted.");
 
