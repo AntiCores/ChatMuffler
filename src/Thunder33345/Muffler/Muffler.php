@@ -92,6 +92,13 @@ class Muffler extends PluginBase implements Listener
 		return $this->muffleTracker;
 	}
 
+	/**
+	 * Parses time format into duration
+	 * @param string $duration
+	 *
+	 * @return int|null
+	 * @internal Internal parsing, may change anytime
+	 */
 	static public function parseTimeFormat(string $duration):?int
 	{
 		$parts = str_split($duration);
@@ -117,6 +124,14 @@ class Muffler extends PluginBase implements Listener
 		return $epoch;
 	}
 
+	/**
+	 * parses duration into human readable format
+	 * @param $seconds
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 * @internal Internal parsing, may change anytime
+	 */
 	static public function parseSecondToHuman($seconds):?string
 	{
 		$dt1 = new \DateTime("@0");
@@ -138,6 +153,13 @@ class Muffler extends PluginBase implements Listener
 		return $str;
 	}
 
+	/**
+	 * Casts command input into int
+	 * @param $time
+	 *
+	 * @return int|null
+	 * @internal Internal parsing, may change anytime
+	 */
 	static public function castToInt($time):?int
 	{
 		if(ctype_digit($time)) $time = (int)$time;
