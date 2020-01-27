@@ -27,19 +27,14 @@ class MuffleChatCommand extends PluginCommand implements CommandExecutor
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args):bool
 	{
 		if(count($args) !== 1) return false;
-		$time = array_shift($args);
-		if(is_string($time)){
-			$time = strtolower($time);
-			if($time == 'forever') $time = MufflerTracker::mute_forever;
-			elseif($time == 'unmute') $time = MufflerTracker::unmute;
+		$timeT = array_shift($args);
+
+		$time = Muffler::castToInt($timeT);
+		if($time == null){
+			$sender->sendMessage('Failed to parse (' . $timeT . '), Time must be in seconds or timeformat ex 1h2i3s');
+			return true;
 		}
-		if(!is_numeric($time)){
-			$time = Muffler::parseTimeFormat($time);
-			if($time == null){
-				$sender->sendMessage('Failed to parse (' . $time . '), Time must be in seconds or timeformat ex 1h2i3s');
-				return true;
-			}
-		}
+
 		/** @var Muffler $muffler */
 		$muffler = $this->getPlugin();
 

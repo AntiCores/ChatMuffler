@@ -29,18 +29,12 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 	{
 		if(count($args) !== 2) return false;
 		$playerName = array_shift($args);
-		$time = array_shift($args);
-		if(is_string($time)){
-			$time = strtolower($time);
-			if($time == 'forever') $time = MufflerTracker::mute_forever;
-			elseif($time == 'unmute') $time = MufflerTracker::unmute;
-		}
-		if(!is_numeric($time)){
-			$time = Muffler::parseTimeFormat($time);
-			if($time == null){
-				$sender->sendMessage('Failed to parse (' . $time . '), Time must be in seconds or timeformat ex 1h2i3s');
-				return true;
-			}
+		$timeT = array_shift($args);
+
+		$time = Muffler::castToInt($timeT);
+		if($time == null){
+			$sender->sendMessage('Failed to parse (' . $timeT . '), Time must be in seconds or timeformat ex 1h2i3s');
+			return true;
 		}
 
 		/** @var Muffler $muffler */

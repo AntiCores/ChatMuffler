@@ -138,4 +138,16 @@ class Muffler extends PluginBase implements Listener
 		return $str;
 	}
 
+	static public function castToInt($time):?int
+	{
+		if(ctype_digit($time)) $time = (int)$time;
+		if(is_string($time)){
+			$time = strtolower($time);
+			if($time == 'forever') $time = MufflerTracker::mute_forever;
+			elseif($time == 'unmute') $time = MufflerTracker::unmute;
+
+			$time = Muffler::parseTimeFormat($time);
+		}
+		return $time;
+	}
 }
