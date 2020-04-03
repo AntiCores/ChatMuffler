@@ -53,13 +53,13 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 
 		$broadcast = $muffler->getLang()->get('user.muted.broadcast', "{player} have been muted by {mod} for {time}.");
 		if($broadcast !== false){
-			$broadcast = str_replace([$playerName, $sender->getName(), $finalTimeParsed], ['{player}', '{mod}', '{time}'], $broadcast);
+			$broadcast = str_replace(['{player}', '{mod}', '{time}'],[$playerName, $sender->getName(), $finalTimeParsed], $broadcast);
 			$muffler->getServer()->broadcastMessage($broadcast);
 		}
 
 		$notice = $muffler->getLang()->get('user.muted.notice', "You have been muted by {mod} for {time}.");
 		if($notice !== false AND $player instanceof Player){
-			$notice = str_replace([$playerName, $sender->getName(), $finalTimeParsed], ['{player}', '{mod}', '{time}'], $notice);
+			$notice = str_replace(['{player}', '{mod}', '{time}'],[$playerName, $sender->getName(), $finalTimeParsed], $notice);
 			$player->sendMessage($notice);
 		}
 

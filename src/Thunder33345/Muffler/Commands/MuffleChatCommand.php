@@ -45,7 +45,7 @@ class MuffleChatCommand extends PluginCommand implements CommandExecutor
 
 		$broadcast = $muffler->getLang()->get('chat.muted.broadcast', "The chat have been muted by {mod} for {time}.");
 		if($broadcast !== false){
-			$broadcast = str_replace([$sender->getName(), $finalTimeParsed], ['{mod}', '{time}'], $broadcast);
+			$broadcast = str_replace(['{mod}', '{time}'], [$sender->getName(), $finalTimeParsed], $broadcast);
 			$muffler->getServer()->broadcastMessage($broadcast);
 		}
 
