@@ -42,16 +42,30 @@ class MuffleCommand extends PluginCommand implements CommandExecutor
 		$player = $muffler->getServer()->getPlayer($playerName);
 		if(!$player instanceof Player){
 			$sender->sendMessage("Player (" . $playerName . ") not found, Taking input literally.");
-			$player = $playerName;
 		} else {
 			$playerName = $player->getName();
 		}
 
-		$muffler->getMuffleTracker()->muffle($player, $time, true);
+		$muffler->getMuffleTracker()->muffle($playerName, $time, true);
 
-		if($time == MufflerTracker::unmute) self::broadcastCommandMessage($sender, "Unmuted $playerName.");
-		elseif($time == MufflerTracker::mute_forever) self::broadcastCommandMessage($sender, "Muted muted $playerName for forever.");
-		else self::broadcastCommandMessage($sender, "Muted " . $playerName . " for " . Muffler::parseSecondToHuman($time) . ".");
+		$finalTime = $muffler->getMuffleTracker()->getMuffledExpiry($playerName, true);
+		$finalTimeParsed = $muffler::parseSecondToHuman($finalTime);
+
+		$broadcast = $muffler->getLang()->get('user.muted.broadcast', "{player} have been muted by {mod} for {time}.");
+		if($broadcast !== false){
+			$broadcast = str_replace([$playerName, $sender->getName(), $finalTimeParsed], ['{player}', '{mod}', '{time}'], $broadcast);
+			$muffler->getServer()->broadcastMessage($broadcast);
+		}
+
+		$notice = $muffler->getLang()->get('user.muted.notice', "You have been muted by {mod} for {time}.");
+		if($notice !== false AND $player instanceof Player){
+			$notice = str_replace([$playerName, $sender->getName(), $finalTimeParsed], ['{player}', '{mod}', '{time}'], $notice);
+			$player->sendMessage($notice);
+		}
+
+		if($finalTime == MufflerTracker::unmute) self::broadcastCommandMessage($sender, "Unmuted $playerName.");
+		elseif($finalTime == MufflerTracker::mute_forever) self::broadcastCommandMessage($sender, "Muted muted $playerName for forever.");
+		else self::broadcastCommandMessage($sender, "Muted " . $playerName . " for " . $finalTimeParsed . ".");
 		return true;
 	}
 }

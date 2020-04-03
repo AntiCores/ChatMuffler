@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Thunder33345\Muffler;
 
+use DateTime;
+use Exception;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\plugin\PluginBase;
@@ -19,6 +21,8 @@ class Muffler extends PluginBase implements Listener
 	 * @var $muffleTracker MufflerTracker
 	 */
 	private $muffleTracker;
+	/** @var Config */
+	private $lang;
 
 	public function onEnable()
 	{
@@ -31,6 +35,9 @@ class Muffler extends PluginBase implements Listener
 		$this->muffleTracker = new MufflerTracker($players, $chat);
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->saveDefaultConfig();
+
+		$this->saveResource("lang.yml", false);
+		$this->lang = new Config($this->getDataFolder() . '/lang.yml');
 
 		$commandMap = $this->getServer()->getCommandMap();
 		$commandMap->register($this->getName(), new MuffleCommand($this));
@@ -64,10 +71,12 @@ class Muffler extends PluginBase implements Listener
 			else
 				$remain = self::parseSecondToHuman($remain);
 
-			$msg = $this->getConfig()->get('chatMuted', 'The chat have been muted for {time}!');
-			$msg = str_replace('{time}', $remain, $msg);
-			$player->sendMessage($msg);
-			$chatEvent->setCancelled(true);
+			$msg = $this->getLang()->get('chat.muted.msg', 'The chat have been muted for {time}!');
+			if($msg != false){
+				$msg = str_replace('{time}', $remain, $msg);
+				$player->sendMessage($msg);
+				$chatEvent->setCancelled(true);
+			}
 			return;
 		}
 
@@ -80,10 +89,12 @@ class Muffler extends PluginBase implements Listener
 			else
 				$remain = self::parseSecondToHuman($remain);
 
-			$msg = $this->getConfig()->get('userMuted', 'You have been muted for {time}!');
-			$msg = str_replace('{time}', $remain, $msg);
-			$player->sendMessage($msg);
-			$chatEvent->setCancelled(true);
+			$msg = $this->getLang()->get('user.muted.msg', 'You have been muted for {time}!');
+			if($msg !== false){
+				$msg = str_replace('{time}', $remain, $msg);
+				$player->sendMessage($msg);
+				$chatEvent->setCancelled(true);
+			}
 			return;
 		}
 	}
@@ -94,8 +105,11 @@ class Muffler extends PluginBase implements Listener
 		return $this->muffleTracker;
 	}
 
+	public function getLang(){ return $this->lang; }
+
 	/**
 	 * Parses time format into duration
+	 *
 	 * @param string $duration
 	 *
 	 * @return int|null
@@ -128,16 +142,20 @@ class Muffler extends PluginBase implements Listener
 
 	/**
 	 * parses duration into human readable format
+	 *
 	 * @param $seconds
 	 *
 	 * @return string|null
-	 * @throws \Exception
+	 * @throws Exception
 	 * @internal Internal parsing, may change anytime
 	 */
 	static public function parseSecondToHuman($seconds):?string
 	{
-		$dt1 = new \DateTime("@0");
-		$dt2 = new \DateTime("@$seconds");
+		if($seconds === MufflerTracker::mute_forever){
+			return 'forever';
+		}
+		$dt1 = new DateTime("@0");
+		$dt2 = new DateTime("@$seconds");
 		$diff = $dt1->diff($dt2);
 		if($diff === false) return null;
 		$str = [];
@@ -157,6 +175,7 @@ class Muffler extends PluginBase implements Listener
 
 	/**
 	 * Casts command input into int
+	 *
 	 * @param $time
 	 *
 	 * @return int|null
