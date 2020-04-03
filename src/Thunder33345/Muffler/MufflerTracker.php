@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Thunder33345\Muffler;
 
-use InvalidArgumentException;
 use pocketmine\Player;
 
 class MufflerTracker
@@ -32,7 +31,7 @@ class MufflerTracker
 				unset ($this->muffled[$player]);
 			}
 		}
-		if($chatMuffled !== self::mute_forever AND time() > $chatMuffled) $chatMuffled = 0;
+		if($chatMuffled !== self::mute_forever AND time() > $chatMuffled) $chatMuffled = self::unmute;
 		$this->chatMuffled = $chatMuffled;
 	}
 
@@ -152,7 +151,7 @@ class MufflerTracker
 			return;
 		}
 		if($till == self::unmute OR $till < self::mute_forever){
-			unset($this->chatMuffled);
+			$this->chatMuffled = self::unmute;
 			return;
 		}
 
@@ -242,6 +241,6 @@ class MufflerTracker
 		}
 		if(is_object($player))
 			$class = " | " . get_class($player); else $class = '';
-		throw new InvalidArgumentException(__CLASS__ . "::" . __FUNCTION__ . "() Expects Player OR String but got " . gettype($player) . ' - ' . $class);
+		throw new \InvalidArgumentException(__CLASS__ . "::" . __FUNCTION__ . "() Expects Player OR String but got " . gettype($player) . ' - ' . $class);
 	}
 }

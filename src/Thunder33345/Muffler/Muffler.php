@@ -183,7 +183,7 @@ class Muffler extends PluginBase implements Listener
 	 */
 	static public function castToInt($time):?int
 	{
-		if(ctype_digit($time)) $time = (int)$time;
+		if(is_numeric($time)) $time = (int)$time;
 		if(is_string($time)){
 			$time = strtolower($time);
 			if($time == 'forever') return MufflerTracker::mute_forever;
