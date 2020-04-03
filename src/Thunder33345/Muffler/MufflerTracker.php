@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Thunder33345\Muffler;
 
 use pocketmine\Player;
+use poggit\libasynql\ExtensionMissingException;
 
 class MufflerTracker
 {
@@ -224,7 +225,7 @@ class MufflerTracker
 	/**
 	 * Convert Player/Player Names into lowercased string
 	 *
-	 * @param Player|String $player
+	 * @param Player|String|mixed $player
 	 *
 	 * @return string
 	 * @internal Internal Boilerplate Function

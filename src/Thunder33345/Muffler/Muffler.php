@@ -18,10 +18,10 @@ use Thunder33345\Muffler\Commands\UnMuffleCommand;
 class Muffler extends PluginBase implements Listener
 {
 	/**
-	 * @var $muffleTracker MufflerTracker
+	 * @var MufflerTracker $muffleTracker
 	 */
 	private $muffleTracker;
-	/** @var Config */
+	/** @var Config $lang*/
 	private $lang;
 
 	public function onEnable()
@@ -143,7 +143,7 @@ class Muffler extends PluginBase implements Listener
 	/**
 	 * parses duration into human readable format
 	 *
-	 * @param $seconds
+	 * @param mixed $seconds
 	 *
 	 * @return string|null
 	 * @throws Exception
@@ -176,7 +176,7 @@ class Muffler extends PluginBase implements Listener
 	/**
 	 * Casts command input into int
 	 *
-	 * @param $time
+	 * @param mixed $time
 	 *
 	 * @return int|null
 	 * @internal Internal parsing, may change anytime
