@@ -87,6 +87,11 @@ class Muffler extends PluginBase implements Listener
 
 	public function onDisable()
 	{
+		$this->onSave();
+	}
+
+	public function onSave()
+	{
 		$all = $this->muffleTracker->getAllMuffled();
 		$chat = $this->muffleTracker->getChatMuffle();
 		$config = new Config($this->getDataFolder() . '/muffle.yml');
