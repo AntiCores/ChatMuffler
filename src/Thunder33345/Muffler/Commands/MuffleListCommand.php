@@ -33,6 +33,7 @@ class MuffleListCommand extends PluginCommand implements CommandExecutor
 			$sender->sendMessage("Insufficient permissions.");
 			return true;
 		}
+
 		$players = $muffleTracker->getAllMuffled();
 		$sender->sendMessage("[ChatMuffler] Listing All Mutes (" . count($players) . ")");
 
@@ -46,6 +47,15 @@ class MuffleListCommand extends PluginCommand implements CommandExecutor
 
 			$sender->sendMessage("$player => " . Muffler::parseSecondToHuman($remaining));
 		}
+
+		if($muffleTracker->isChatMuffled()){
+			$remain = $muffleTracker->getChatMuffle(true);
+			if($remain == MufflerTracker::mute_forever)
+				$remain = 'Forever';
+			else
+				$remain = Muffler::parseSecondToHuman($remain);
+			$sender->sendMessage("[ChatMuffler] Chat Muted till: $remain");
+		} else$sender->sendMessage("[ChatMuffler] Chat UnMuted");
 		return true;
 	}
 }
