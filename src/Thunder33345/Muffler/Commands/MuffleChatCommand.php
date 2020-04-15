@@ -51,7 +51,7 @@ class MuffleChatCommand extends PluginCommand implements CommandExecutor
 
 		if($finalTime == MufflerTracker::unmute) self::broadcastCommandMessage($sender, "Unmuted the chat.");
 		elseif($finalTime == MufflerTracker::mute_forever) self::broadcastCommandMessage($sender, "Muted muted the chat forever.");
-		else self::broadcastCommandMessage($sender, "Muted the chat for " . $finalTime . ".");
+		else self::broadcastCommandMessage($sender, "Muted the chat for " . $finalTimeParsed . ".");
 		return true;
 	}
 }
