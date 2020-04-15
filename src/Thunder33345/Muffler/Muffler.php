@@ -8,6 +8,7 @@ use DateTime;
 use Exception;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use Thunder33345\Muffler\Commands\MuffleChatCommand;
@@ -21,7 +22,7 @@ class Muffler extends PluginBase implements Listener
 	 * @var MufflerTracker $muffleTracker
 	 */
 	private $muffleTracker;
-	/** @var Config $lang*/
+	/** @var Config $lang */
 	private $lang;
 
 	public function onEnable()
@@ -62,9 +63,7 @@ class Muffler extends PluginBase implements Listener
 		if($player->hasPermission('chatmuffler.bypass')) return;
 		$muffleTracker = $this->muffleTracker;
 
-		if($muffleTracker->isChatMuffled()){//chat muted
-			if($player->hasPermission('chatmuffler.bypass.chat')) return;
-
+		if($this->isChatMuffled($player)){//chat muted
 			$remain = $muffleTracker->getChatMuffle(true);
 			if($remain == MufflerTracker::mute_forever)
 				$remain = 'Forever';
@@ -80,9 +79,7 @@ class Muffler extends PluginBase implements Listener
 			return;
 		}
 
-		if($muffleTracker->isMuffled($player)){//player muted
-			if($player->hasPermission('chatmuffler.bypass.user')) return;
-
+		if($this->isPlayerMuffled($player)){//player muted
 			$remain = $muffleTracker->getMuffledExpiry($player, true);
 			if($remain == MufflerTracker::mute_forever)
 				$remain = 'Forever';
@@ -99,6 +96,25 @@ class Muffler extends PluginBase implements Listener
 		}
 	}
 
+	public function isMuffled(Player $player):bool
+	{
+		if($player->hasPermission('chatmuffler.bypass')) return false;
+		return $this->isChatMuffled($player) === false AND $this->isPlayerMuffled($player) === false;
+	}
+
+	public function isChatMuffled(Player $player):bool
+	{
+		if($player->hasPermission('chatmuffler.bypass')) return false;
+		if($player->hasPermission('chatmuffler.bypass.chat')) return false;
+		return $this->muffleTracker->isChatMuffled();
+	}
+
+	public function isPlayerMuffled(Player $player):bool
+	{
+		if($player->hasPermission('chatmuffler.bypass')) return false;
+		if($player->hasPermission('chatmuffler.bypass.user')) return false;
+		return $this->muffleTracker->isMuffled($player);
+	}
 
 	public function getMuffleTracker():MufflerTracker
 	{
