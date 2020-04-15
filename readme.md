@@ -1,5 +1,5 @@
 # Chat Muffler
-[<img src="https://img.shields.io/badge/Poggit-view-brightgreen.svg" width="110" height="30"/>](https://poggit.pmmp.io/ci/AntiCores/ChatMuffler)
+[<img src="https://img.shields.io/badge/Poggit-view-brightgreen.svg" width="110" height="30"/>](https://poggit.pmmp.io/ci/AntiCores/ChatMuffler/ChatMuffler)
 [<img src="https://img.shields.io/badge/Discord-join-697EC4.svg" width="110" height="30"/>](https://discord.gg/uBghvNp)
 
 A Simple Plugin For Managing Mutes
