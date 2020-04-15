@@ -1,11 +1,11 @@
 {
   #set to false to disable any of it
-  chat.muted.msg: "The chat have been muted for {time}!",
-  chat.muted.broadcast: "The chat have been muted by {mod} for {time}.",
-  #chat.muted.cmd: "You cant use this command while the chat is muted", #not implemented yet
+  chat.muted.msg: "The chat have been muted for {time}!",#error msg when chatting while muted
+  chat.muted.broadcast: "The chat have been muted by {mod} for {time}.",#broadcast to every player
+  chat.muted.cmd: "You cant use this command while the chat is muted", #when using blocked cmd
 
   user.muted.msg: "You have been muted for {time}!",
-  user.muted.notice: "You have been muted for {time} by {mod}!",
-  user.muted.broadcast: "{player} have been muted by {mod} for {time}."
-  #user.muted.cmd: "You cant use this command while you are muted", #not implemented yet
+  user.muted.notice: "You have been muted for {time} by {mod}!",#personal notice
+  user.muted.broadcast: "{player} have been muted by {mod} for {time}."#global notice
+  user.muted.cmd: "You cant use this command while you are muted",
 }
