@@ -6,8 +6,10 @@ namespace Thunder33345\Muffler;
 
 use DateTime;
 use Exception;
+use pocketmine\command\Command;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\event\server\CommandEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -22,11 +24,16 @@ class Muffler extends PluginBase implements Listener
 	 * @var MufflerTracker $muffleTracker
 	 */
 	private $muffleTracker;
+	/** @var CommandTracker */
+	private $commandTracker;
 	/** @var Config $lang */
 	private $lang;
 
+	//todo list into own command
+	//todo save on crash -> save when mute is issued
 	public function onEnable()
 	{
+		$this->saveDefaultConfig();
 		$config = new Config($this->getDataFolder() . '/muffle.yml');
 		$players = $config->get('players', []);
 
@@ -35,16 +42,47 @@ class Muffler extends PluginBase implements Listener
 
 		$this->muffleTracker = new MufflerTracker($players, $chat);
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		$this->saveDefaultConfig();
 
 		$this->saveResource("lang.yml", false);
 		$this->lang = new Config($this->getDataFolder() . '/lang.yml');
+
+		$this->initTracker();
 
 		$commandMap = $this->getServer()->getCommandMap();
 		$commandMap->register($this->getName(), new MuffleCommand($this));
 		$commandMap->register($this->getName(), new UnMuffleCommand($this));
 		$commandMap->register($this->getName(), new MuffleChatCommand($this));
 		$commandMap->register($this->getName(), new MuffleInfoCommand($this));
+	}
+
+	private function initTracker()
+	{
+		$commandTracker = $this->commandTracker = new CommandTracker();
+		$all = $this->getConfig()->getNested('blocked-commands.all', []);
+		$user = $this->getConfig()->getNested('blocked-commands.user', []);
+		$chat = $this->getConfig()->getNested('blocked-commands.chat', []);
+
+		$allBlocked = ['all' => $all, 'user' => $user, 'chat' => $chat];
+		$allProcessed = ['all' => [], 'user' => [], 'chat' => []];
+		$commandMap = $this->getServer()->getCommandMap();
+		foreach($allBlocked as $type => $data){
+			foreach($data as $commandName){
+				$commandInstance = $commandMap->getCommand($commandName);
+				if(!$commandInstance instanceof Command){
+					$allProcessed[$type][] = $commandName;//ignore not found
+					continue;
+				}
+				$allProcessed[$type][] = $commandInstance->getName();
+			}
+		}
+		$this->getConfig()->setNested('blocked-commands.all', $allProcessed['all']);
+		$this->getConfig()->setNested('blocked-commands.user', $allProcessed['user']);
+		$this->getConfig()->setNested('blocked-commands.chat', $allProcessed['chat']);
+		$this->getConfig()->save();
+
+		$commandTracker->addAll(...$allProcessed['all']);
+		$commandTracker->addChat(...$allProcessed['chat']);
+		$commandTracker->addPlayer(...$allProcessed['user']);
 	}
 
 	public function onDisable()
@@ -93,6 +131,33 @@ class Muffler extends PluginBase implements Listener
 				$chatEvent->setCancelled(true);
 			}
 			return;
+		}
+	}
+
+	public function onCommandProcess(CommandEvent $event)
+	{
+		$player = $event->getSender();
+		if(!$player instanceof Player) return;
+
+		$commandLine = $event->getCommand();
+		$commandName = explode(' ', $commandLine, 2)[0];
+		$selectedCommand = $this->getServer()->getCommandMap()->getCommand($commandName);
+		if(!$selectedCommand instanceof Command) return;
+		$commandName = $selectedCommand->getName();
+
+		if($this->isChatMuffled($player)){
+			if($this->commandTracker->chatBlocked($commandName)){
+				$event->setCancelled();
+				$lang = $this->lang->get('chat.muted.cmd', 'You cant use this command while the chat is muted');
+				if($lang !== false) $player->sendMessage($lang);
+			}
+		}
+		if($this->isPlayerMuffled($player)){
+			if($this->commandTracker->playerBlocked($commandName)){
+				$event->setCancelled();
+				$lang = $this->lang->get('user.muted.cmd', 'You cant use this command while the chat is muted');
+				if($lang !== false) $player->sendMessage($lang);
+			}
 		}
 	}
 

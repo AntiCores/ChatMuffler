@@ -6,6 +6,6 @@
 
   user.muted.msg: "You have been muted for {time}!",
   user.muted.notice: "You have been muted for {time} by {mod}!",#personal notice
-  user.muted.broadcast: "{player} have been muted by {mod} for {time}."#global notice
+  user.muted.broadcast: "{player} have been muted by {mod} for {time}.",#global notice
   user.muted.cmd: "You cant use this command while you are muted",
 }

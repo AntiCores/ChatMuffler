@@ -1,3 +1,11 @@
-{
-
-}
+---
+blocked-commands:
+  #this will block ALL commands, even aliases, so please only include a command once
+  #tell would block msg, WILL NOT WORK if another plugins handle it them self, like /r etc
+  all: #applied when muted in chat, or user muted
+    - me
+  chat: #applied when chat is muted
+    - fictional #does nothing if command is not found
+  user: #applied when user is muted
+    - tell
+...
