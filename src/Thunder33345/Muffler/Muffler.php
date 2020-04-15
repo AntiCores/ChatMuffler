@@ -16,6 +16,7 @@ use pocketmine\utils\Config;
 use Thunder33345\Muffler\Commands\MuffleChatCommand;
 use Thunder33345\Muffler\Commands\MuffleCommand;
 use Thunder33345\Muffler\Commands\MuffleInfoCommand;
+use Thunder33345\Muffler\Commands\MuffleListCommand;
 use Thunder33345\Muffler\Commands\UnMuffleCommand;
 
 class Muffler extends PluginBase implements Listener
@@ -29,8 +30,6 @@ class Muffler extends PluginBase implements Listener
 	/** @var Config $lang */
 	private $lang;
 
-	//todo list into own command
-	//todo save on crash -> save when mute is issued
 	public function onEnable()
 	{
 		$this->saveDefaultConfig();
@@ -53,6 +52,7 @@ class Muffler extends PluginBase implements Listener
 		$commandMap->register($this->getName(), new UnMuffleCommand($this));
 		$commandMap->register($this->getName(), new MuffleChatCommand($this));
 		$commandMap->register($this->getName(), new MuffleInfoCommand($this));
+		$commandMap->register($this->getName(), new MuffleListCommand($this));
 	}
 
 	private function initTracker()

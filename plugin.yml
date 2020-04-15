@@ -36,23 +36,13 @@
           "description": "Allow Muting Chat"
         },
         "chatmuffler.muffleinfo": {
-          "defualt": "true",
+          "defualt": "op",
           "description": "Allow Using Muffle Info",
-          "children": {
-            "chatmuffler.muffleinfo.self": {
-              "defualt": "true",
-              "description": "Allow Using Muffle Info On Self"
-            },
-            "chatmuffler.muffleinfo.other": {
-              "defualt": "op",
-              "description": "Allow Using Muffle Info On Others"
-            },
-            "chatmuffler.muffleinfo.all": {
-              "defualt": "op",
-              "description": "Allow Using Muffle Info To List Everyone"
-            }
+        },
+          "chatmuffler.mufflelist": {
+            "defualt": "op",
+            "description": "Allow Using Muffle List",
           }
-        }
       }
     }
   }
