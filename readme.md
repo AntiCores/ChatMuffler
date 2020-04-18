@@ -17,7 +17,8 @@ A Simple Plugin For Managing Mutes
 | muffle     	| muffle someone  	| /muffle <username> <time> 	    | mute, silence         	|
 | unmuffle     	| unmuffle someone 	| /muffle <username> <time> 	    | mute, silence         	|
 | mufflechat 	| muffle the chat 	| /mufflechat <time>        	    | mutechat, silencechat 	|
-| muffleinfo 	| muffle info     	| /muffleinfo [username] -a/-all    | muteinfo              	|
+| muffleinfo 	| muffle info     	| /muffleinfo [username]            | muteinfo              	|
+| mufflelist 	| list muffled users| /mufflelist                       | mufflelist              	|
 
 ## Permission
 
@@ -28,10 +29,8 @@ A Simple Plugin For Managing Mutes
 | chatmuffler.bypass.user      	| Bypass User Muffled Restriction          	| OP      	|
 | chatmuffler.muffleuser       	| Allow Muting Other Users                 	| OP      	|
 | chatmuffler.mufflechat       	| Allow Muting Chat                        	| OP      	|
-| chatmuffler.muffleinfo       	| Allow Using Muffle Info                  	| Anyone  	|
-| chatmuffler.muffleinfo.self  	| Allow Using Muffle Info On Self          	| Anyone  	|
-| chatmuffler.muffleinfo.other 	| Allow Using Muffle Info On Others        	| OP      	|
-| chatmuffler.muffleinfo.all   	| Allow Using Muffle Info To List Everyone 	| OP      	|
+| chatmuffler.muffleinfo       	| Allow Using Muffle Info                  	| OP      	|
+| chatmuffler.mufflelist      	| Allow Listing Muffled users             	| OP  	    |
 
 ## Time parser supports
 \<time\> can be second which is assumed by default, or a time formatted input
